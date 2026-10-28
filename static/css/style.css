@@ -10,7 +10,7 @@
   --accent: #7f5226;        /* copper (dim #8b5a2b) darkened to 4.9:1 on paper, for text and links */
   --accent-fill: #b87333;   /* copper/brass for marks, rules and highlights */
   --accent-soft: rgba(184, 115, 51, .14);
-  --ours: #b5401f; --base: #1f6fae; --gt: #6f6253; --others: #a89880;   /* trajectory lines: validated on #e8dcc8 */
+  --ours: #b5541f; --base: #00876f; --gt: #5a4a38; --others: #b3a286;   /* trajectories: burnt copper (ours) vs verdigris (baseline), ink-dashed GT; validated on #efe6d7 */
   --ok: rgba(96, 128, 60, .22); --no: rgba(160, 82, 45, .18); --ok-ink: #3d5220; --no-ink: #7a3a1f;
   --shadow: 0 1px 2px rgba(42, 24, 16, .06), 0 4px 16px rgba(42, 24, 16, .07);
   --radius: 10px; --w: 1080px; --narrow: 820px;
