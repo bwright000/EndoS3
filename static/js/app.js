@@ -58,8 +58,7 @@
         r.map((v, i) => `<td class="${v === "–" ? "na" : ""} ${m.sup && i === 6 ? "grp" : ""}">${cell(v)}</td>`).join("") + "</tr>";
     });
     $("rtable").innerHTML = h + "</tbody>";
-    const c2 = m.only === "sup" ? "" : " C2 is scored on its first 360 frames; the full sequence is the failure case discussed in the paper's supplementary material.";
-    $("metricNote").textContent = `${m.note} Bold: best; underlined: second.${c2}`;
+    $("metricNote").textContent = "Bold: best · underlined: second.";
   }
   segmented($("metricTabs"), P.metrics.map((m) => [m.id, m.label]), "ate", renderTable);
   renderTable("ate");
@@ -75,11 +74,6 @@
   /* ---------------- comparison slider ---------------- */
   const TASKS = [["render", "Rendering"], ["depth", "Depth"], ["semantics", "Semantics"]];
   const BETTER = { render: "max", depth: "min", semantics: "max" };
-  const NOTE = {
-    render: "Badges: PSNR of each method on this frame.",
-    depth: "Depth maps on one shared colour scale (FoundationStereo reference). Badges: median |depth − FoundationStereo| on this frame.",
-    semantics: "Badges: frame mIoU (%). CRCD++ colours: liver red, gallbladder green, tool blue."
-  };
   fetch("static/data/compare.json").then((r) => r.json()).then((C) => {
     const st = { task: "render", set: null, left: null, right: "endos3" };
     const range = $("cmpRange"), slider = $("slider");
@@ -98,10 +92,6 @@
       $("tagLeft").innerHTML = label(set, st.left) + badge(set, st.left);
       $("tagRight").innerHTML = label(set, st.right) + badge(set, st.right);
       $("cmpLeft").value = st.left; $("cmpRight").value = st.right;
-      let note = NOTE[set.task];
-      if (set.task === "depth" && set.scale) note += ` Colour scale ${set.scale[0]}–${set.scale[1]} mm.`;
-      if (set.task === "semantics" && set.gt_note) note = "Badges: frame mIoU (%) against the DeepLabV3+ masks every method received (as in the paper). Semantic-SuPer colours: beef purple, chicken amber, tool blue.";
-      $("cmpNote").textContent = note;
       [...$("cmpThumbs").children].forEach((t) => {
         t.classList.toggle("is-left", t.dataset.k === st.left); t.classList.toggle("is-right", t.dataset.k === st.right);
       });
@@ -125,7 +115,7 @@
     function pickTask(task) {
       st.task = task;
       const sets = C.sets.filter((s) => s.task === task);
-      pills($("cmpScene"), sets.map((s) => [s.id, s.label]), sets[0].id, pickSet);
+      pills($("cmpScene"), sets.map((s) => [s.id, s.label.replace(/, frame \d+$/, "").replace("Semantic-SuPer", "SemSup")]), sets[0].id, pickSet);
       pickSet(sets[0].id);
     }
     $("cmpLeft").addEventListener("change", (e) => { st.left = e.target.value; draw(); });
@@ -133,12 +123,12 @@
     range.addEventListener("input", () => slider.style.setProperty("--pos", range.value + "%"));
     segmented($("cmpTask"), TASKS, "render", pickTask);
     pickTask("render");
-  }).catch(() => { $("cmpNote").textContent = "Comparison data could not be loaded (open the page through a web server, not as a local file)."; });
+  }).catch(() => { $("cmpThumbs").textContent = "Comparison data could not be loaded."; });
 
   /* ---------------- trajectories (Plotly loaded on demand) ---------------- */
   const PLOTLY = "https://cdn.jsdelivr.net/npm/plotly.js-gl3d-dist-min@2.35.2/plotly-gl3d.min.js";
   const TNAME = { endos3: "EndoS³ (ours)", dds_base: "DDS-SLAM", sni: "SNI-SLAM", sgs: "SGS-SLAM", semgauss: "SemGauss-SLAM", perseus: "PERSEUS" };
-  let T = null; const ts = { seq: "C1", base: "sni" };
+  let T = null; const ts = { seq: new URLSearchParams(location.search).get("traj") || "C1", base: "sni" };
   function plotTraj() {
     if (!T || !window.Plotly) return;
     const d = T[ts.seq], xyz = (p) => ({ x: p.map((q) => q[0]), y: p.map((q) => q[1]), z: p.map((q) => q[2]) });
@@ -152,18 +142,31 @@
       traces.push(line(ts.base, css("--base"), 3.5, "solid", `${TNAME[ts.base]} — ATE ${d[ts.base].ate.toFixed(2)} mm`));
     }
     traces.push(line("endos3", css("--ours"), 6, "solid", `EndoS³ (ours) — ATE ${d.endos3.ate.toFixed(2)} mm`));
-    const ink = css("--ink-2"), grid = css("--line");
-    const ax = (t) => ({ title: { text: t, font: { size: 12, color: ink } }, color: ink, gridcolor: grid, zerolinecolor: grid, showbackground: false, tickfont: { size: 10 } });
+    // Fit the view to this sequence: true proportions, longest axis across the wide panel (up = middle axis),
+    // looking mostly down the thinnest axis with a slight tilt so the path still reads as 3-D.
+    const pts = traces.flatMap((t) => t.x.map((_, i) => [t.x[i], t.y[i], t.z[i]]));
+    const lo = [0, 1, 2].map((a) => Math.min(...pts.map((p) => p[a]))), hi = [0, 1, 2].map((a) => Math.max(...pts.map((p) => p[a])));
+    const span = [0, 1, 2].map((a) => hi[a] - lo[a]), big = Math.max(...span);
+    const ar = span.map((s) => Math.max(s / big, 0.12));
+    const [S, M, L] = [0, 1, 2].sort((a, b) => span[a] - span[b]);
+    const unit = (a, k) => [0, 1, 2].map((i) => (i === a ? k : 0));
+    const dir = [0, 1, 2].map((i) => unit(S, 1)[i] + unit(M, 0.38)[i] + unit(L, 0.22)[i]);
+    const n = Math.hypot(...dir), dist = 0.6 + 0.65 * (ar[M] + ar[S]), e = dir.map((v) => (v / n) * dist);   // boxier paths: camera further back
+    const ink = css("--ink-2"), grid = css("--line"), font = getComputedStyle(document.body).fontFamily;
+    const ax = (t) => ({ title: { text: t, font: { size: 12, color: ink } }, color: ink, gridcolor: grid, zerolinecolor: grid, linecolor: grid,
+      showbackground: false, tickfont: { size: 11, color: ink }, nticks: 5 });
     Plotly.react($("trajPlot"), traces, {
-      paper_bgcolor: "rgba(0,0,0,0)", margin: { l: 0, r: 0, t: 44, b: 0 },
-      font: { family: "Inter, sans-serif", color: ink },
-      legend: { orientation: "h", x: 0, y: 1, yanchor: "bottom", bgcolor: "rgba(0,0,0,0)", font: { size: 12 } },
-      scene: { aspectmode: "data", xaxis: ax("x (mm)"), yaxis: ax("y (mm)"), zaxis: ax("z (mm)"), camera: { eye: { x: 1.9, y: 1.9, z: 1.2 } } }
+      paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", margin: { l: 0, r: 0, t: 36, b: 0 },
+      font: { family: font, color: ink, size: 13 },
+      legend: { orientation: "h", x: 0, y: 1, yanchor: "bottom", bgcolor: "rgba(0,0,0,0)", font: { size: 13 } },
+      scene: { aspectmode: "manual", aspectratio: { x: ar[0], y: ar[1], z: ar[2] },
+        xaxis: ax("x (mm)"), yaxis: ax("y (mm)"), zaxis: ax("z (mm)"),
+        camera: { eye: { x: e[0], y: e[1], z: e[2] }, up: { x: unit(M, 1)[0], y: unit(M, 1)[1], z: unit(M, 1)[2] }, center: { x: 0, y: 0, z: 0 } } }
     }, { displaylogo: false, responsive: true, modeBarButtonsToRemove: ["toImage"] });
   }
   function initTraj() {
     const seqs = Object.keys(T);
-    pills($("trajSeq"), seqs.map((s) => [s, s + (s === "C2" ? " (frames 0–359)" : "")]), ts.seq, (s) => { ts.seq = s; plotTraj(); });
+    pills($("trajSeq"), seqs.map((s) => [s, s]), ts.seq, (s) => { ts.seq = s; plotTraj(); });
     fillSelect($("trajBase"), [...Object.keys(TNAME).filter((k) => k !== "endos3").map((k) => [k, TNAME[k]]), ["all", "All baselines"]], ts.base);
     $("trajBase").addEventListener("change", (e) => { ts.base = e.target.value; plotTraj(); });
     $("trajPlot").innerHTML = ""; plotTraj();

@@ -134,7 +134,7 @@ label { font-size: 14px; color: var(--ink-2); }
 
 /* trajectories */
 .traj-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-.traj { height: 540px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); position: relative; }
+.traj { height: 460px; position: relative; }   /* no card: the plot sits on the page, like the tables */
 .traj .loading { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; }
 
 /* bibtex */

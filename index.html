@@ -93,14 +93,14 @@
 
     <section id="dataset" class="section">
       <h2>CRCD++ dataset</h2>
-      <p class="lead narrow">20 ex-vivo robotic cholecystectomy sequences (200–2,108 frames; 14,688 stereo pairs) built on eCRCD, with dense human-annotated masks for background, liver, gallbladder and tools on every frame (one instance ID per tool), camera poses, and FoundationStereo depth.</p>
+      <p class="lead narrow">20 robotic cholecystectomy sequences with camera poses, depth, and dense liver, gallbladder and tool masks on every frame.</p>
       <figure class="figure">
         <img src="static/img/crcdpp_annotation.jpg" alt="Annotation comparison on CRCD frames: input image, eCRCD Track Anything propagated masks, and the CRCD++ manual annotations." loading="lazy">
         <figcaption>Input | eCRCD (Track Anything propagation) | CRCD++ manual annotation.</figcaption>
       </figure>
       <div class="table-wrap">
         <table class="dstable">
-          <caption>Surgical semantic SLAM datasets. Sem.: semantic classes (<sup>s</sup>sparse, <sup>t</sup>tools only, <sup>nt</sup>no tools). Seq. len.: continuous sequence length in frames.</caption>
+          <caption>Sem.: semantic classes (<sup>s</sup>sparse, <sup>t</sup>tools only, <sup>nt</sup>no tools).</caption>
           <thead><tr><th></th><th>CholecSeg8k</th><th>EndoVis18</th><th>Endoscapes</th><th>Semantic-SuPer</th><th>StereoMIS</th><th>D4D</th><th>eCRCD</th><th class="us">CRCD++</th></tr></thead>
           <tbody>
             <tr><th>Poses</th><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok us">Yes</td></tr>
@@ -115,10 +115,10 @@
 
     <section id="results" class="section">
       <h2>Results</h2>
-      <p class="lead narrow">Compared with DDS-SLAM, SNI-SLAM, SGS-SLAM, SemGauss-SLAM, PERSEUS and Semantic-SuPer on five CRCD++ sequences and Semantic-SuPer (SemSup). Every method receives the same semantic input.</p>
+      <p class="lead narrow">EndoS<sup>3</sup> against six semantic SLAM methods on CRCD++ and Semantic-SuPer.</p>
 
       <h3 class="sub" id="visual">Visual comparison</h3>
-      <p class="hint">Drag the divider. Pick any two methods; the thumbnails below show every method on the same frame.</p>
+      <p class="hint">Drag the divider to compare.</p>
       <div class="cmp" id="cmp">
         <div class="cmp-controls">
           <div class="seg" role="tablist" id="cmpTask"></div>
@@ -136,7 +136,6 @@
           <span class="tag tr" id="tagRight"></span>
           <input type="range" min="0" max="100" value="50" step="0.1" id="cmpRange" aria-label="Comparison divider position">
         </div>
-        <p class="cmp-note" id="cmpNote"></p>
         <div class="thumbs" id="cmpThumbs"></div>
       </div>
 
@@ -146,7 +145,7 @@
       <p class="hint" id="metricNote"></p>
 
       <h3 class="sub" id="traj">Camera trajectories</h3>
-      <p class="hint">Sim(3)-aligned to the CRCD++ camera poses, origin at the first ground-truth pose; drag to rotate, scroll to zoom. ATE as in the table above.</p>
+      <p class="hint">Drag to rotate, scroll to zoom.</p>
       <div class="traj-controls">
         <div class="pills" id="trajSeq"></div>
         <label>Compare with <select id="trajBase"></select></label>
@@ -157,7 +156,7 @@
       <div class="ablations">
         <div class="table-wrap">
           <table class="rtable small">
-            <caption>Modules, on a subset of CRCD++ C3. MD: motion decomposition (otherwise only instruments are dynamic); IW: instance-aware warp field (otherwise one shared MLP); NA: semantic node allocation (otherwise a fixed node set).</caption>
+            <caption>Module ablation, CRCD++ C3. MD: motion decomposition · IW: instance-aware warp field · NA: semantic node allocation.</caption>
             <thead><tr><th>MD</th><th>IW</th><th>NA</th><th>PSNR ↑</th><th>Depth ↓</th><th>ATE ↓</th><th>mIoU ↑</th></tr></thead>
             <tbody>
               <tr><td class="x">✗</td><td>✓</td><td>✓</td><td>22.18</td><td>5.85</td><td>2.91</td><td>52.8</td></tr>
@@ -169,7 +168,7 @@
         </div>
         <div class="table-wrap">
           <table class="rtable small">
-            <caption>Motion-decomposition tests, CRCD++ C3 frames 469–708. z<sup>A</sup>: instance-level test; z<sup>B</sup>: boundary test.</caption>
+            <caption>Motion-decomposition tests, CRCD++ C3. z<sup>A</sup>: instance test · z<sup>B</sup>: boundary test.</caption>
             <thead><tr><th>z<sup>A</sup></th><th>z<sup>B</sup></th><th>PSNR ↑</th><th>ATE ↓</th><th>mIoU ↑</th></tr></thead>
             <tbody>
               <tr><td>✓</td><td class="x">✗</td><td>24.39</td><td>3.03</td><td>71.9</td></tr>
