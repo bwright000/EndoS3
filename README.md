@@ -28,10 +28,9 @@ A free account serves Pages only from a public repository.
 | `static/css/style.css`, `static/js/app.js` | styles (light parchment palette), comparison video viewer, metric tables, trajectory viewer |
 | `static/data/tables.js` | paper tables, values and best/second marks verbatim from the submission |
 | `static/video/cmp/`, `static/data/compare_video.json` | comparison videos (E3, C2 frames 0–359, SemSup trial 3 × render / depth / semantics): every method tiled in one video so the slider halves stay frame-locked, plus per-frame scores |
-| `static/data/cloud/`, `static/data/cloud.json` | 3-D frame: Fig 3's CRCD frame (E3 frame 192), each method's rendered RGB-D back-projected to a point cloud (every 2nd pixel, raw depth), + FoundationStereo reference |
 | `static/data/trajectories.json` | Sim(3)-aligned trajectories (mm), scored exactly as the paper's ATE table (C2 = first 360 frames) |
 | `static/video/` | 720p web copy of the demo video (`endos3_video_draft_full.mp4`) + poster |
 | `static/img/pipeline.png`, `crcdpp_annotation.jpg` | method figure (from `endos3_method_figure.pdf`), CRCD++ annotation figure |
-| `tools/export_videos.py`, `tools/export_cloud.py`, `tools/export_assets.py` | regenerate the comparison videos, the 3-D frame and the trajectories from the benchmark outputs (author's machine paths) |
+| `tools/export_videos.py`, `tools/export_assets.py` | regenerate the comparison videos and the trajectories from the benchmark outputs (author's machine paths) |
 
-The 3-D trajectory viewer uses Plotly (`plotly.js-gl3d-dist-min@2.35.2`) and the 3-D frame uses three.js (`three@0.160.0`), both from jsDelivr and loaded only when their section scrolls into view.
+The 3-D trajectory viewer uses Plotly (`plotly.js-gl3d-dist-min@2.35.2` from jsDelivr), loaded only when the section scrolls into view.

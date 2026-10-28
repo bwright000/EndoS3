@@ -144,14 +144,6 @@ label { font-size: 14px; color: var(--ink-2); }
 .traj { height: 460px; position: relative; }   /* no card: the plot sits on the page, like the tables */
 .traj .loading { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; }
 
-/* 3-D frame: dark panels like the comparison slider, so the rendered colours read as they do there */
-.cloud-pick { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-.reset { border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); border-radius: 7px; padding: 4px 10px; font: 500 13px Inter, sans-serif; cursor: pointer; }
-.clouds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-.cloud { position: relative; height: 400px; border-radius: var(--radius); overflow: hidden; background: #000; box-shadow: var(--shadow); touch-action: none; cursor: grab; }
-.cloud:active { cursor: grabbing; }
-.cloud canvas { display: block; width: 100%; height: 100%; }
-
 /* bibtex */
 .bib { position: relative; }
 .bib pre { margin: 0; padding: 18px 20px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; font: 13.5px/1.55 "JetBrains Mono", ui-monospace, monospace; color: var(--ink); }
@@ -164,8 +156,6 @@ label { font-size: 14px; color: var(--ink-2); }
   .navlinks { display: none; }
   .authors { font-size: 16px; }
   .traj { height: 420px; }
-  .clouds { grid-template-columns: 1fr; }
-  .cloud { height: 300px; }
   .hero { padding-top: 36px; }
 }
 /* the tiled source video is decoded but never shown: kept in the render tree (1 px, transparent) so browsers keep advancing frames */
