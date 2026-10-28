@@ -9,21 +9,6 @@ sys.path.insert(0, R); sys.path.insert(0, "F:/Datasets/IPCAI 2027/Figures"); os.
 import cv2, numpy as np
 import make_figs as F, make_paper_figs as P, bench_layout as L
 
-IMG = os.path.join(SITE, "static", "img", "cmp")
-NAME = {"input": "Input", "gt": "Ground truth", "ref": "FoundationStereo", "endos3": "EndoS³ (ours)", "dds_base": "DDS-SLAM",
-        "sni": "SNI-SLAM", "sgs": "SGS-SLAM", "semgauss": "SemGauss-SLAM", "perseus": "PERSEUS"}
-
-
-def put(set_id, key, rgb, w=1280):
-    d = os.path.join(IMG, set_id); os.makedirs(d, exist_ok=True)
-    if rgb.dtype != np.uint8:
-        rgb = (np.clip(rgb, 0, 1) * 255).astype(np.uint8)
-    if rgb.shape[1] > w:
-        rgb = cv2.resize(rgb, (w, round(rgb.shape[0] * w / rgb.shape[1])), interpolation=cv2.INTER_AREA)
-    cv2.imwrite(os.path.join(d, f"{key}.jpg"), cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 86])
-    return f"static/img/cmp/{set_id}/{key}.jpg"
-
-
 # ---- trajectories (paper ATE table: Sim(3) Umeyama, post-refinement trajectories, C2 first 360 frames, GT lag shift)
 TM = ["endos3", "dds_base", "sni", "sgs", "semgauss", "perseus"]
 traj = {}
