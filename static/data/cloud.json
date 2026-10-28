@@ -1,0 +1,58 @@
+{
+ "seq": "E3_005",
+ "frame": 192,
+ "w": 640,
+ "h": 360,
+ "stride": 2,
+ "fx": 548.3480944621668,
+ "fy": 548.3480944621668,
+ "cx": 311.40380859375,
+ "cy": 191.56299018859863,
+ "zmed": 129.3,
+ "keys": [
+  "fs",
+  "endos3",
+  "dds_base",
+  "sni",
+  "sgs",
+  "semgauss"
+ ],
+ "names": {
+  "fs": "FoundationStereo",
+  "endos3": "EndoS³ (ours)",
+  "dds_base": "DDS-SLAM",
+  "sni": "SNI-SLAM",
+  "sgs": "SGS-SLAM",
+  "semgauss": "SemGauss-SLAM"
+ },
+ "info": {
+  "fs": {
+   "n": 218209
+  },
+  "endos3": {
+   "n": 230400,
+   "err": 0.9,
+   "psnr": 23.88
+  },
+  "dds_base": {
+   "n": 230400,
+   "err": 10.6,
+   "psnr": 17.98
+  },
+  "sni": {
+   "n": 230400,
+   "err": 10.5,
+   "psnr": 16.84
+  },
+  "sgs": {
+   "n": 226892,
+   "err": 12.4,
+   "psnr": 11.17
+  },
+  "semgauss": {
+   "n": 230349,
+   "err": 17.1,
+   "psnr": 14.44
+  }
+ }
+}

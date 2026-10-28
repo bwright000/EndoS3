@@ -155,6 +155,88 @@
     loop();
   }).catch(() => { $("cmpThumbs").textContent = "Comparison videos could not be loaded."; });
 
+  /* ---------------- 3-D frame: two point clouds under one camera (three.js loaded on demand) ---------------- */
+  const cio = new IntersectionObserver(async (ents) => {
+    if (!ents.some((e) => e.isIntersecting)) return;
+    cio.disconnect();
+    try {
+      const [THREE, { OrbitControls }, C] = await Promise.all([import("three"), import("three/addons/controls/OrbitControls.js"),
+        fetch("static/data/cloud.json").then((r) => r.json())]);
+      const N = C.w * C.h, cache = {};
+      const mat = new THREE.PointsMaterial({ size: 0.45, vertexColors: true, sizeAttenuation: true });
+      async function cloud(k) {   // uint16 depth (0.01 mm, 0 = no point) then RGB, on the stride-2 pixel grid
+        if (cache[k]) return cache[k];
+        const buf = await (await fetch(`static/data/cloud/${k}.bin`)).arrayBuffer();
+        const z = new Uint16Array(buf, 0, N), c = new Uint8Array(buf, 2 * N, 3 * N);
+        const pos = new Float32Array(3 * N), col = new Float32Array(3 * N); let n = 0;
+        for (let v = 0; v < C.h; v++) for (let u = 0; u < C.w; u++) {
+          const i = v * C.w + u, d = z[i] / 100; if (!d) continue;
+          pos[3 * n] = (u - C.cx) / C.fx * d; pos[3 * n + 1] = -(v - C.cy) / C.fy * d; pos[3 * n + 2] = -d;   // camera frame, y up, looking down -z
+          col[3 * n] = c[3 * i] / 255; col[3 * n + 1] = c[3 * i + 1] / 255; col[3 * n + 2] = c[3 * i + 2] / 255; n++;
+        }
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(pos.subarray(0, 3 * n), 3));
+        g.setAttribute("color", new THREE.BufferAttribute(col.subarray(0, 3 * n), 3));
+        return (cache[k] = new THREE.Points(g, mat));
+      }
+      const cam = new THREE.PerspectiveCamera(36, 1, 1, 5000), target = new THREE.Vector3(0, 0, -C.zmed);
+      const home = { theta: 0.42, phi: Math.PI / 2 - 0.22, r: C.zmed * 1.5 };
+      const place = (theta) => { cam.position.setFromSphericalCoords(home.r, home.phi, theta).add(target); cam.lookAt(target); };
+      const panes = ["cloudL", "cloudR"].map((id) => {
+        const el = $(id), r = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        r.outputColorSpace = THREE.LinearSRGBColorSpace;   // vertex colours are the renders' sRGB values: pass them through untouched
+        r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); r.setClearColor(0x000000, 0);
+        el.prepend(r.domElement);
+        return { el, r, scene: new THREE.Scene(), pts: null };
+      });
+      const draw = () => panes.forEach((p) => p.r.render(p.scene, cam));
+      const fit = () => {
+        panes.forEach((p) => p.r.setSize(p.el.clientWidth, p.el.clientHeight, false));
+        cam.aspect = panes[0].el.clientWidth / Math.max(1, panes[0].el.clientHeight); cam.updateProjectionMatrix(); draw();
+      };
+      new ResizeObserver(fit).observe(panes[0].el);
+      // one camera, two controllers sharing one target: dragging either view moves both
+      let sway = true, seen = true; const t0 = performance.now();
+      const ctl = panes.map((p) => new OrbitControls(cam, p.r.domElement));
+      ctl[1].target = ctl[0].target; ctl[0].target.copy(target);
+      let syncing = false;   // the other controller's update() fires "change" too: don't bounce it back
+      ctl.forEach((c) => {
+        c.zoomSpeed = 0.8;
+        c.addEventListener("change", () => {
+          if (syncing) return;
+          syncing = true; ctl.forEach((o) => o !== c && o.update()); syncing = false; draw();
+        });
+        c.addEventListener("start", () => { sway = false; });
+      });
+      // gentle side-to-side sway until the first drag, so the frame reads as 3-D
+      const tick = (t) => {
+        if (sway && seen) { place(home.theta + 0.35 * Math.sin((t - t0) / 1600)); ctl.forEach((c) => c.update()); draw(); }
+        if (sway) requestAnimationFrame(tick);
+      };
+      new IntersectionObserver((e) => { seen = e[0].isIntersecting; }, { threshold: 0.1 }).observe($("clouds"));
+      $("cloudReset").addEventListener("click", () => { sway = false; ctl[0].target.copy(target); place(home.theta); ctl.forEach((c) => c.update()); draw(); });
+      const tag = (k) => {
+        const i = C.info[k];
+        return k === "fs" ? `${C.names.fs} (reference)` : `${k === "endos3" ? "<b>Ours</b>" : C.names[k]} · <b>${i.err.toFixed(1)} mm</b> · ${i.psnr.toFixed(1)} dB`;
+      };
+      async function show(p, k, tagId) {
+        const pts = await cloud(k);
+        if (p.pts) p.scene.remove(p.pts);
+        p.scene.add((p.pts = pts)); $(tagId).innerHTML = tag(k); draw();
+      }
+      const base = C.keys.filter((k) => k !== "endos3" && k !== "fs").sort((a, b) => C.info[a].err - C.info[b].err);
+      fillSelect($("cloudLeft"), [...base, "fs"].map((k) => [k, k === "fs" ? `${C.names.fs} (reference)` : C.names[k]]), base[0]);
+      $("cloudLeft").addEventListener("change", (e) => show(panes[0], e.target.value, "cloudTagL"));
+      place(home.theta); ctl.forEach((c) => c.update()); fit();
+      await Promise.all([show(panes[0], base[0], "cloudTagL"), show(panes[1], "endos3", "cloudTagR")]);
+      requestAnimationFrame(tick);
+    } catch (err) {
+      console.error(err);
+      $("clouds").innerHTML = '<p class="muted">The 3-D frame could not be loaded (it needs WebGL).</p>';
+    }
+  }, { rootMargin: "300px" });
+  cio.observe($("clouds"));
+
   /* ---------------- trajectories (Plotly loaded on demand) ---------------- */
   const PLOTLY = "https://cdn.jsdelivr.net/npm/plotly.js-gl3d-dist-min@2.35.2/plotly-gl3d.min.js";
   const TNAME = { endos3: "EndoS³ (ours)", dds_base: "DDS-SLAM", sni: "SNI-SLAM", sgs: "SGS-SLAM", semgauss: "SemGauss-SLAM", perseus: "PERSEUS" };
