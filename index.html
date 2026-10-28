@@ -10,24 +10,28 @@
   <meta property="og:image" content="static/img/pipeline.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="static/css/style.css">
+  <script>
+    // theme before first paint (same key and rule as the portfolio: stored choice, else system preference)
+    (function () { var t = null; try { t = new URLSearchParams(location.search).get("theme") || localStorage.getItem("theme"); } catch (e) {}
+      if ((t || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark") document.documentElement.classList.add("dark"); })();
+  </script>
 </head>
 <body>
+  <div class="backdrop" aria-hidden="true"><div class="grid"></div><div class="orb"></div><div class="orb b"></div></div>
+  <div class="page">
   <nav class="topnav" aria-label="Sections">
     <div class="topnav-inner">
-      <a class="brand" href="#top">EndoS³</a>
+      <a class="brand" href="#top">~/endos3</a>
       <div class="navlinks">
-        <a href="#video">Video</a><a href="#abstract">Abstract</a><a href="#method">Method</a><a href="#dataset">CRCD++</a><a href="#results">Results</a><a href="#bibtex">BibTeX</a>
+        <a href="#video">video</a><a href="#abstract">abstract</a><a href="#method">method</a><a href="#dataset">crcd++</a><a href="#results">results</a><a href="#bibtex">bibtex</a>
       </div>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
-      </button>
     </div>
   </nav>
 
   <header class="hero" id="top">
-    <p class="venue">IPCAI 2027 <span class="muted">(submitted)</span></p>
+    <p class="meta"><span class="arrow">→</span> IPCAI 2027 · submitted</p>
     <h1>EndoS<sup>3</sup>: <span class="hl">Endo</span>scopic <span class="hl">S</span>emantic <span class="hl">S</span>platting <span class="hl">S</span>LAM</h1>
     <p class="authors">
       <span>Mona Sheikh Zeinoddin<sup>1*</sup></span>
@@ -41,16 +45,16 @@
       <span><sup>1</sup>Hawkes Institute, University College London</span>
       <span><sup>2</sup>Department of Urology, University College London Hospitals</span>
     </p>
-    <p class="equal muted"><sup>*</sup>Equal contribution</p>
+    <p class="equal muted">* equal contribution</p>
     <div class="buttons">
       <a class="btn disabled" aria-disabled="true" title="Coming soon">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 2h9l5 5v15H6zM14 3.5V8h4.5"/></svg>Paper<span class="soon">soon</span></a>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 2h9l5 5v15H6zM14 3.5V8h4.5"/></svg>paper<span class="soon">soon</span></a>
       <a class="btn disabled" aria-disabled="true" title="Coming soon">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>Code<span class="soon">soon</span></a>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>code<span class="soon">soon</span></a>
       <a class="btn disabled" aria-disabled="true" title="Coming soon">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7.6 3 4 4.3 4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6c0-1.7-3.6-3-8-3zm0 2c3.9 0 6 1 6 1s-2.1 1-6 1-6-1-6-1 2.1-1 6-1zM6 8.6C7.5 9.2 9.6 9.5 12 9.5s4.5-.3 6-.9V12c0 .4-2.2 1.5-6 1.5S6 12.4 6 12zm0 5.6c1.5.6 3.6.9 6 .9s4.5-.3 6-.9V18c0 .4-2.2 1.5-6 1.5S6 18.4 6 18z"/></svg>CRCD++ Dataset<span class="soon">soon</span></a>
-      <a class="btn" href="#video">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>Video</a>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7.6 3 4 4.3 4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6c0-1.7-3.6-3-8-3zm0 2c3.9 0 6 1 6 1s-2.1 1-6 1-6-1-6-1 2.1-1 6-1zM6 8.6C7.5 9.2 9.6 9.5 12 9.5s4.5-.3 6-.9V12c0 .4-2.2 1.5-6 1.5S6 12.4 6 12zm0 5.6c1.5.6 3.6.9 6 .9s4.5-.3 6-.9V18c0 .4-2.2 1.5-6 1.5S6 18.4 6 18z"/></svg>crcd++ dataset<span class="soon">soon</span></a>
+      <a class="btn primary" href="#video">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>watch video →</a>
     </div>
   </header>
 
@@ -65,7 +69,7 @@
     </section>
 
     <section id="abstract" class="section narrow">
-      <h2>Abstract</h2>
+      <h2>abstract</h2>
       <p><strong>Purpose.</strong> Despite advances in 3D surgical scene understanding, semantic simultaneous localisation and mapping (SLAM) remains under-explored for two key reasons. First, it requires solving three challenging tasks in parallel: camera pose tracking, high-fidelity deformable reconstruction, and semantic mapping, making progress particularly demanding. Second, progress is further limited by the scarcity of datasets that provide the ground truth needed to evaluate all three tasks comprehensively under procedural conditions that closely reflect real endoscopic environments.</p>
       <p>We propose EndoS<sup>3</sup>, a semantic SLAM framework based on 3D Gaussian splatting that uses per-frame instance masks to guide all three tasks. An instance-level motion decomposition separates static from dynamic instances, testing the flow that camera motion cannot explain against both flow noise and neighbouring instances. The camera is tracked against the static Gaussians, while an instance-aware warp field gives each dynamic instance its own control nodes and deformation network. A semantic node allocation redistributes a fixed node budget across instances according to their size and non-rigidity. We also introduce CRCD++, an ex-vivo cholecystectomy dataset with RGB-D frames, camera poses and instance annotations for full semantic SLAM evaluation.</p>
       <p><strong>Results.</strong> We compare EndoS<sup>3</sup> with state-of-the-art general-purpose and surgical semantic SLAM methods in tracking, reconstruction and semantic mapping on the CRCD++ and the SemSup datasets. EndoS<sup>3</sup> surpasses all previous approaches.</p>
@@ -73,7 +77,7 @@
     </section>
 
     <section id="method" class="section">
-      <h2>Method</h2>
+      <h2>method</h2>
       <figure class="figure">
         <a href="static/img/pipeline.png" target="_blank" rel="noopener"><img src="static/img/pipeline.png" alt="EndoS3 pipeline: RGB, depth and instance map inputs; tracking with instance-level motion decomposition and pose estimation against static Gaussians; mapping with an instance-aware warp field and semantic node allocation; losses on colour, depth, instance, optical flow, scene flow and DINOv3 features." loading="lazy"></a>
         <figcaption>EndoS<sup>3</sup> uses instance semantics in both tracking and mapping.</figcaption>
@@ -95,8 +99,8 @@
     </section>
 
     <section id="dataset" class="section">
-      <h2>CRCD++ dataset</h2>
-      <p class="lead narrow">20 ex-vivo robotic cholecystectomy sequences (200–2,108 frames; 14,688 stereo pairs) built on eCRCD, with dense human-annotated masks for background, liver, gallbladder and tools on every frame (one instance ID per tool), camera poses, and FoundationStereo depth.</p>
+      <h2>crcd++_dataset</h2>
+      <p class="lead">20 ex-vivo robotic cholecystectomy sequences (200–2,108 frames; 14,688 stereo pairs) built on eCRCD, with dense human-annotated masks for background, liver, gallbladder and tools on every frame (one instance ID per tool), camera poses, and FoundationStereo depth.</p>
       <figure class="figure">
         <img src="static/img/crcdpp_annotation.jpg" alt="Annotation comparison on CRCD frames: input image, eCRCD Track Anything propagated masks, and the CRCD++ manual annotations." loading="lazy">
         <figcaption>Input | eCRCD (Track Anything propagation) | CRCD++ manual annotation.</figcaption>
@@ -117,8 +121,8 @@
     </section>
 
     <section id="results" class="section">
-      <h2>Results</h2>
-      <p class="lead narrow">Compared with DDS-SLAM, SNI-SLAM, SGS-SLAM, SemGauss-SLAM, PERSEUS and Semantic-SuPer on five CRCD++ sequences and Semantic-SuPer (SemSup). Every method receives the same semantic input.</p>
+      <h2>results</h2>
+      <p class="lead">Compared with DDS-SLAM, SNI-SLAM, SGS-SLAM, SemGauss-SLAM, PERSEUS and Semantic-SuPer on five CRCD++ sequences and Semantic-SuPer (SemSup). Every method receives the same semantic input.</p>
 
       <h3 class="sub" id="visual">Visual comparison</h3>
       <p class="hint">Drag the divider. Pick any two methods; the thumbnails below show every method on the same frame.</p>
@@ -135,8 +139,8 @@
           <img id="imgRight" alt="">
           <div class="clip" id="clipLeft"><img id="imgLeft" alt=""></div>
           <div class="divider" id="divider" aria-hidden="true"><span></span></div>
-          <span class="tag tl" id="tagLeft"></span>
-          <span class="tag tr" id="tagRight"></span>
+          <span class="ptag tl" id="tagLeft"></span>
+          <span class="ptag tr" id="tagRight"></span>
           <input type="range" min="0" max="100" value="50" step="0.1" id="cmpRange" aria-label="Comparison divider position">
         </div>
         <p class="cmp-note" id="cmpNote"></p>
@@ -185,7 +189,7 @@
     </section>
 
     <section id="bibtex" class="section narrow">
-      <h2>BibTeX</h2>
+      <h2>bibtex</h2>
       <div class="bib">
         <button class="copy" id="copyBib" type="button">Copy</button>
 <pre id="bibText">@misc{sheikhzeinoddin2026endos3,
@@ -200,8 +204,17 @@
   </main>
 
   <footer class="footer">
-    <p>Hawkes Institute, University College London. Page layout inspired by <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://gs-slam.github.io/">GS-SLAM</a>.</p>
+    <div class="footer-inner">
+      <p>© 2026 — EndoS³ authors · Hawkes Institute, UCL</p>
+      <p>layout after <a href="https://nerfies.github.io/">nerfies</a> and <a href="https://gs-slam.github.io/">gs-slam</a></p>
+    </div>
   </footer>
+  </div>
+
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+    <svg class="sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
+    <svg class="moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+  </button>
 
   <script src="static/data/tables.js"></script>
   <script src="static/js/app.js"></script>

@@ -7,16 +7,18 @@
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
   };
 
-  /* ---------------- theme ---------------- */
-  const saved = new URLSearchParams(location.search).get("theme") || store.get("endos3-theme");
-  if (saved) document.documentElement.dataset.theme = saved;
-  const isDark = () => document.documentElement.dataset.theme === "dark" ||
-    (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  /* ---------------- theme (class "dark" on <html>, key "theme": same as the portfolio) ---------------- */
+  const root = document.documentElement;
+  const isDark = () => root.classList.contains("dark");
   const themeListeners = [];
   $("themeToggle").addEventListener("click", () => {
     const next = isDark() ? "light" : "dark";
-    document.documentElement.dataset.theme = next; store.set("endos3-theme", next);
+    root.classList.toggle("dark", next === "dark"); store.set("theme", next);
     themeListeners.forEach((f) => f());
+  });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    if (store.get("theme")) return;
+    root.classList.toggle("dark", e.matches); themeListeners.forEach((f) => f());
   });
 
   /* ---------------- helpers ---------------- */
@@ -168,7 +170,7 @@
     const ax = (t) => ({ title: { text: t, font: { size: 12, color: ink } }, color: ink, gridcolor: grid, zerolinecolor: grid, showbackground: false, tickfont: { size: 10 } });
     Plotly.react($("trajPlot"), traces, {
       paper_bgcolor: "rgba(0,0,0,0)", margin: { l: 0, r: 0, t: 44, b: 0 },
-      font: { family: "Inter, sans-serif", color: ink },
+      font: { family: "JetBrains Mono, monospace", color: ink },
       legend: { orientation: "h", x: 0, y: 1, yanchor: "bottom", bgcolor: "rgba(0,0,0,0)", font: { size: 12 } },
       scene: { aspectmode: "data", xaxis: ax("x (mm)"), yaxis: ax("y (mm)"), zaxis: ax("z (mm)"), camera: { eye: { x: 1.9, y: 1.9, z: 1.2 } } }
     }, { displaylogo: false, responsive: true, modeBarButtonsToRemove: ["toImage"] });
@@ -181,7 +183,6 @@
     $("trajPlot").innerHTML = ""; plotTraj();
   }
   themeListeners.push(plotTraj);
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", plotTraj);
   const io = new IntersectionObserver((ents) => {
     if (!ents.some((e) => e.isIntersecting)) return;
     io.disconnect();
