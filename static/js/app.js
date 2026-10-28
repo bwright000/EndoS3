@@ -71,59 +71,89 @@
     setTimeout(() => ($("copyBib").textContent = "Copy"), 1600);
   });
 
-  /* ---------------- comparison slider ---------------- */
+  /* ---------------- comparison videos ----------------
+     One video per sequence and task holds every method as a tile (3 x 2 grid); both sides of the slider and every
+     thumbnail are drawn from that one decoder, so they stay frame-locked. Badges show that frame's score. */
   const TASKS = [["render", "Rendering"], ["depth", "Depth"], ["semantics", "Semantics"]];
-  const BETTER = { render: "max", depth: "min", semantics: "max" };
-  fetch("static/data/compare.json").then((r) => r.json()).then((C) => {
-    const st = { task: "render", set: null, left: null, right: "endos3" };
-    const range = $("cmpRange"), slider = $("slider");
-    const label = (set, k) => (k === "gt" && set.gt_note) ? `Ground truth (${set.gt_note})` : C.names[k] || k;
-    const badge = (set, k) => set.badge[k] ? ` · <b>${set.badge[k]}</b>` : "";
-    const keys = (set) => [set.ref, ...(set.ref === "gt" ? ["input"] : []), "endos3", ...Object.keys(set.tiles).filter((k) => !["input", "gt", "ref", "endos3"].includes(k))];
+  fetch("static/data/compare_video.json").then((r) => r.json()).then((C) => {
+    const st = { set: null, left: null, right: "endos3", frame: -1 };
+    const video = $("cmpVideo"), slider = $("slider"), range = $("cmpRange"), scrub = $("cmpScrub");
+    const cvL = $("cvLeft"), cvR = $("cvRight"), cxL = cvL.getContext("2d"), cxR = cvR.getContext("2d");
+    let thumbs = [], visible = false, wantPlay = true;
+    const label = (set, k) => (k === "gt" && set.gt_note) ? `Reference (${set.gt_note})` : C.names[k] || k;
+    const short = (set, k) => k === "endos3" ? "<b>Ours</b>" : (k === "gt" && set.gt_note ? "Input labels" : C.names[k]);
+    const mean = (a) => { const v = a.filter((x) => x != null); return v.reduce((p, q) => p + q, 0) / v.length; };
+    const fmt = (set, k, i) => { const v = set.scores[k] && set.scores[k][i]; return v == null ? "" : `${v.toFixed(set.unit === "%" ? 1 : set.unit === "mm" ? 2 : 1)} ${set.unit}`; };
     function bestBaseline(set) {
-      const b = Object.keys(set.badge).filter((k) => k !== "endos3");
-      const v = (k) => parseFloat(set.badge[k]);
-      return b.sort((a, c) => BETTER[set.task] === "max" ? v(c) - v(a) : v(a) - v(c))[0];
+      const b = Object.keys(set.scores).filter((k) => k !== "endos3");
+      return b.sort((a, c) => set.better === "max" ? mean(set.scores[c]) - mean(set.scores[a]) : mean(set.scores[a]) - mean(set.scores[c]))[0];
     }
-    function draw() {
-      const set = st.set;
-      $("imgLeft").src = set.tiles[st.left]; $("imgLeft").alt = label(set, st.left);
-      $("imgRight").src = set.tiles[st.right]; $("imgRight").alt = label(set, st.right);
-      $("tagLeft").innerHTML = label(set, st.left) + badge(set, st.left);
-      $("tagRight").innerHTML = label(set, st.right) + badge(set, st.right);
-      $("cmpLeft").value = st.left; $("cmpRight").value = st.right;
-      [...$("cmpThumbs").children].forEach((t) => {
-        t.classList.toggle("is-left", t.dataset.k === st.left); t.classList.toggle("is-right", t.dataset.k === st.right);
-      });
+    function tile(ctx, k, w, h) {
+      const set = st.set, j = set.keys.indexOf(k), [tw, th] = set.tile;
+      ctx.drawImage(video, (j % 3) * tw, Math.floor(j / 3) * th, tw, th, 0, 0, w, h);
+    }
+    function paint(force) {
+      const set = st.set; if (!set || video.readyState < 2) return;
+      const i = Math.min(set.n - 1, Math.floor(video.currentTime * set.fps + 1e-3));
+      const [tw, th] = set.tile;
+      tile(cxR, st.right, tw, th); tile(cxL, st.left, tw, th);
+      thumbs.forEach(([c, k]) => tile(c.getContext("2d"), k, c.width, c.height));
+      if (i !== st.frame || force) {
+        st.frame = i;
+        const tag = (k) => { const v = fmt(set, k, i); return label(set, k) + (v ? ` · <b>${v}</b>` : ""); };
+        $("tagLeft").innerHTML = tag(st.left); $("tagRight").innerHTML = tag(st.right);
+        thumbs.forEach(([c, k, em]) => (em.textContent = fmt(set, k, i)));
+        scrub.value = i; $("cmpFrame").textContent = `${i + 1} / ${set.n}`;
+      }
+    }
+    const loop = () => { paint(false); video.requestVideoFrameCallback ? video.requestVideoFrameCallback(loop) : requestAnimationFrame(loop); };
+    function markThumbs() {
+      [...$("cmpThumbs").children].forEach((t) => { t.classList.toggle("is-left", t.dataset.k === st.left); t.classList.toggle("is-right", t.dataset.k === st.right); });
+      $("cmpLeft").value = st.left; $("cmpRight").value = st.right; paint(true);
+    }
+    function setPlaying(p) {
+      wantPlay = p; $("cmpPlay").classList.toggle("paused", !p); $("cmpPlay").setAttribute("aria-label", p ? "Pause" : "Play");
+      if (p && visible) video.play().catch(() => {}); else video.pause();
     }
     function pickSet(id) {
-      const set = C.sets.find((s) => s.id === id); st.set = set;
-      const opts = keys(set).map((k) => [k, label(set, k)]);
+      const set = C.sets.find((s) => s.id === id); st.set = set; st.frame = -1;
+      const [tw, th] = set.tile; [cvL, cvR].forEach((c) => { c.width = tw; c.height = th; });
+      slider.style.aspectRatio = `${tw} / ${th}`;
       st.left = bestBaseline(set); st.right = "endos3";
+      const opts = set.keys.map((k) => [k, label(set, k)]);
       fillSelect($("cmpLeft"), opts, st.left); fillSelect($("cmpRight"), opts, st.right);
-      const th = $("cmpThumbs"); th.innerHTML = "";
-      keys(set).forEach((k) => {
+      const box = $("cmpThumbs"); box.innerHTML = ""; thumbs = [];
+      set.keys.forEach((k) => {
         const b = document.createElement("button");
-        b.type = "button"; b.className = "thumb" + (set.id.includes("trial") ? " sup" : ""); b.dataset.k = k;
-        b.title = `Show ${label(set, k)} on the left`;
-        b.innerHTML = `<img src="${set.tiles[k]}" alt="" loading="lazy"><span>${k === "endos3" ? "<b>Ours</b>" : (k === "gt" && set.gt_note ? "Input labels" : C.names[k])}<em>${set.badge[k] || ""}</em></span>`;
-        b.addEventListener("click", () => { if (k === st.right) return; st.left = k; draw(); });
-        th.appendChild(b);
+        b.type = "button"; b.className = "thumb"; b.dataset.k = k; b.title = `Show ${label(set, k)} on the left`;
+        const c = document.createElement("canvas"); c.width = Math.round(tw / 3); c.height = Math.round(th / 3);
+        const sp = document.createElement("span"); sp.innerHTML = short(set, k); const em = document.createElement("em"); sp.appendChild(em);
+        b.append(c, sp); b.addEventListener("click", () => { if (k === st.right) return; st.left = k; markThumbs(); });
+        box.appendChild(b); thumbs.push([c, k, em]);
       });
-      draw();
+      scrub.max = set.n - 1;
+      video.src = set.src; video.load();
+      video.addEventListener("loadeddata", () => { markThumbs(); setPlaying(wantPlay); }, { once: true });
+      markThumbs();
     }
     function pickTask(task) {
-      st.task = task;
       const sets = C.sets.filter((s) => s.task === task);
-      pills($("cmpScene"), sets.map((s) => [s.id, s.label.replace(/, frame \d+$/, "").replace("Semantic-SuPer", "SemSup")]), sets[0].id, pickSet);
-      pickSet(sets[0].id);
+      const cur = st.set && sets.find((s) => s.label === st.set.label);
+      const first = (cur || sets[0]).id;
+      pills($("cmpScene"), sets.map((s) => [s.id, s.label]), first, pickSet);
+      pickSet(first);
     }
-    $("cmpLeft").addEventListener("change", (e) => { st.left = e.target.value; draw(); });
-    $("cmpRight").addEventListener("change", (e) => { st.right = e.target.value; draw(); });
+    $("cmpLeft").addEventListener("change", (e) => { st.left = e.target.value; markThumbs(); });
+    $("cmpRight").addEventListener("change", (e) => { st.right = e.target.value; markThumbs(); });
     range.addEventListener("input", () => slider.style.setProperty("--pos", range.value + "%"));
+    $("cmpPlay").addEventListener("click", () => setPlaying(!wantPlay));
+    scrub.addEventListener("input", () => { setPlaying(false); video.currentTime = (Number(scrub.value) + 0.5) / st.set.fps; });
+    video.addEventListener("seeked", () => paint(true));
+    new IntersectionObserver((e) => { visible = e[0].isIntersecting; setPlaying(wantPlay); }, { threshold: 0.15 }).observe(slider);
     segmented($("cmpTask"), TASKS, "render", pickTask);
     pickTask("render");
-  }).catch(() => { $("cmpThumbs").textContent = "Comparison data could not be loaded."; });
+    loop();
+  }).catch(() => { $("cmpThumbs").textContent = "Comparison videos could not be loaded."; });
 
   /* ---------------- trajectories (Plotly loaded on demand) ---------------- */
   const PLOTLY = "https://cdn.jsdelivr.net/npm/plotly.js-gl3d-dist-min@2.35.2/plotly-gl3d.min.js";

@@ -108,9 +108,9 @@ label { font-size: 14px; color: var(--ink-2); }
 .cmp-controls .seg { margin-bottom: 0; }
 .cmp-pick { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 12px 0; }
 .slider { position: relative; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: #000; user-select: none; touch-action: pan-y; }
-.slider img { width: 100%; height: auto; pointer-events: none; }
+.slider canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
 .slider .clip { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0); }
-.slider .clip img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.slider .clip canvas { position: absolute; inset: 0; }
 .divider { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; margin-left: -1px; background: #f6efe3; box-shadow: 0 0 0 1px rgba(0,0,0,.25); pointer-events: none; }
 .divider span { position: absolute; top: 50%; left: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,.35); }
 .divider span::before, .divider span::after { content: ""; position: absolute; top: 50%; border: 6px solid transparent; margin-top: -6px; }
@@ -122,11 +122,18 @@ label { font-size: 14px; color: var(--ink-2); }
 .tag { position: absolute; top: 10px; padding: 3px 9px; border-radius: 6px; background: rgba(15,17,20,.78); color: #fff; font-size: 13px; font-weight: 500; pointer-events: none; }
 .tag.tl { left: 10px; } .tag.tr { right: 10px; }
 .tag b { font-weight: 700; }
+.player { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.player .play { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.player .play:hover { border-color: var(--accent-fill); color: var(--accent); }
+.player .play svg { width: 16px; height: 16px; }
+.player .play .i-play, .player .play.paused .i-pause { display: none; }
+.player .play.paused .i-play { display: block; }
+.player input[type=range] { flex: 1; accent-color: var(--accent-fill); }
+.player .fc { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 72px; text-align: right; }
 .cmp-note { color: var(--muted); font-size: 13px; margin: 8px 0 0; min-height: 1em; }
 .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
 .thumb { border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: var(--surface); cursor: pointer; padding: 0; text-align: left; color: var(--ink); font: inherit; }
-.thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
-.thumb.sup img { aspect-ratio: 4/3; }
+.thumb canvas { display: block; width: 100%; height: auto; }
 .thumb span { display: flex; justify-content: space-between; gap: 6px; font-size: 12px; padding: 4px 7px; }
 .thumb span em { font-style: normal; color: var(--muted); font-variant-numeric: tabular-nums; }
 .thumb.is-left { border-color: var(--base); }
@@ -151,3 +158,7 @@ label { font-size: 14px; color: var(--ink-2); }
   .traj { height: 420px; }
   .hero { padding-top: 36px; }
 }
+/* the tiled source video is decoded but never shown: kept in the render tree (1 px, transparent) so browsers keep advancing frames */
+.cmp { position: relative; }
+.src-video { position: absolute; left: 0; top: 0; width: 1px !important; height: 1px; opacity: 0; pointer-events: none; }
+.thumb span { white-space: nowrap; font-size: 11.5px; }
