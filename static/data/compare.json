@@ -1,0 +1,245 @@
+{
+ "names": {
+  "input": "Input",
+  "gt": "Ground truth",
+  "ref": "FoundationStereo",
+  "endos3": "EndoS³ (ours)",
+  "dds_base": "DDS-SLAM",
+  "sni": "SNI-SLAM",
+  "sgs": "SGS-SLAM",
+  "semgauss": "SemGauss-SLAM",
+  "perseus": "PERSEUS"
+ },
+ "sets": [
+  {
+   "id": "render_E3_005_192",
+   "task": "render",
+   "label": "CRCD++ E3, frame 192",
+   "ref": "input",
+   "tiles": {
+    "input": "static/img/cmp/render_E3_005_192/input.jpg",
+    "dds_base": "static/img/cmp/render_E3_005_192/dds_base.jpg",
+    "sni": "static/img/cmp/render_E3_005_192/sni.jpg",
+    "sgs": "static/img/cmp/render_E3_005_192/sgs.jpg",
+    "semgauss": "static/img/cmp/render_E3_005_192/semgauss.jpg",
+    "endos3": "static/img/cmp/render_E3_005_192/endos3.jpg"
+   },
+   "badge": {
+    "dds_base": "18.0 dB",
+    "sni": "16.8 dB",
+    "sgs": "11.2 dB",
+    "semgauss": "14.4 dB",
+    "endos3": "23.9 dB"
+   },
+   "metric": "PSNR"
+  },
+  {
+   "id": "render_trial_3_128",
+   "task": "render",
+   "label": "Semantic-SuPer trial 3, frame 128",
+   "ref": "input",
+   "tiles": {
+    "input": "static/img/cmp/render_trial_3_128/input.jpg",
+    "dds_base": "static/img/cmp/render_trial_3_128/dds_base.jpg",
+    "sni": "static/img/cmp/render_trial_3_128/sni.jpg",
+    "sgs": "static/img/cmp/render_trial_3_128/sgs.jpg",
+    "semgauss": "static/img/cmp/render_trial_3_128/semgauss.jpg",
+    "endos3": "static/img/cmp/render_trial_3_128/endos3.jpg"
+   },
+   "badge": {
+    "dds_base": "28.5 dB",
+    "sni": "24.4 dB",
+    "sgs": "21.6 dB",
+    "semgauss": "20.9 dB",
+    "endos3": "33.8 dB"
+   },
+   "metric": "PSNR"
+  },
+  {
+   "id": "depth_E3_005_192",
+   "task": "depth",
+   "label": "CRCD++ E3, frame 192",
+   "ref": "ref",
+   "tiles": {
+    "ref": "static/img/cmp/depth_E3_005_192/ref.jpg",
+    "dds_base": "static/img/cmp/depth_E3_005_192/dds_base.jpg",
+    "sni": "static/img/cmp/depth_E3_005_192/sni.jpg",
+    "sgs": "static/img/cmp/depth_E3_005_192/sgs.jpg",
+    "semgauss": "static/img/cmp/depth_E3_005_192/semgauss.jpg",
+    "endos3": "static/img/cmp/depth_E3_005_192/endos3.jpg"
+   },
+   "badge": {
+    "dds_base": "10.6 mm",
+    "sni": "10.5 mm",
+    "sgs": "12.4 mm",
+    "semgauss": "17.1 mm",
+    "endos3": "0.9 mm"
+   },
+   "metric": "median |d - FS|",
+   "scale": [
+    39.7,
+    200.3,
+    "magma"
+   ]
+  },
+  {
+   "id": "render_C2_001_97",
+   "task": "render",
+   "label": "CRCD++ C2, frame 97",
+   "ref": "input",
+   "tiles": {
+    "input": "static/img/cmp/render_C2_001_97/input.jpg",
+    "dds_base": "static/img/cmp/render_C2_001_97/dds_base.jpg",
+    "sni": "static/img/cmp/render_C2_001_97/sni.jpg",
+    "sgs": "static/img/cmp/render_C2_001_97/sgs.jpg",
+    "semgauss": "static/img/cmp/render_C2_001_97/semgauss.jpg",
+    "endos3": "static/img/cmp/render_C2_001_97/endos3.jpg"
+   },
+   "badge": {
+    "dds_base": "17.7 dB",
+    "sni": "14.9 dB",
+    "sgs": "11.4 dB",
+    "semgauss": "14.8 dB",
+    "endos3": "21.8 dB"
+   },
+   "metric": "PSNR"
+  },
+  {
+   "id": "render_trial_8_121",
+   "task": "render",
+   "label": "Semantic-SuPer trial 8, frame 121",
+   "ref": "input",
+   "tiles": {
+    "input": "static/img/cmp/render_trial_8_121/input.jpg",
+    "dds_base": "static/img/cmp/render_trial_8_121/dds_base.jpg",
+    "sni": "static/img/cmp/render_trial_8_121/sni.jpg",
+    "sgs": "static/img/cmp/render_trial_8_121/sgs.jpg",
+    "semgauss": "static/img/cmp/render_trial_8_121/semgauss.jpg",
+    "endos3": "static/img/cmp/render_trial_8_121/endos3.jpg"
+   },
+   "badge": {
+    "dds_base": "29.0 dB",
+    "sni": "22.5 dB",
+    "sgs": "20.4 dB",
+    "semgauss": "21.3 dB",
+    "endos3": "33.5 dB"
+   },
+   "metric": "PSNR"
+  },
+  {
+   "id": "depth_C2_001_97",
+   "task": "depth",
+   "label": "CRCD++ C2, frame 97",
+   "ref": "ref",
+   "tiles": {
+    "ref": "static/img/cmp/depth_C2_001_97/ref.jpg",
+    "dds_base": "static/img/cmp/depth_C2_001_97/dds_base.jpg",
+    "sni": "static/img/cmp/depth_C2_001_97/sni.jpg",
+    "sgs": "static/img/cmp/depth_C2_001_97/sgs.jpg",
+    "semgauss": "static/img/cmp/depth_C2_001_97/semgauss.jpg",
+    "endos3": "static/img/cmp/depth_C2_001_97/endos3.jpg"
+   },
+   "badge": {
+    "dds_base": "5.1 mm",
+    "sni": "5.6 mm",
+    "sgs": "2.8 mm",
+    "semgauss": "4.2 mm",
+    "endos3": "0.5 mm"
+   },
+   "metric": "median |d - FS|",
+   "scale": [
+    43.7,
+    91.2,
+    "magma"
+   ]
+  },
+  {
+   "id": "sem_E3_005_126",
+   "task": "semantics",
+   "label": "CRCD++ E3, frame 126",
+   "ref": "gt",
+   "tiles": {
+    "input": "static/img/cmp/sem_E3_005_126/input.jpg",
+    "gt": "static/img/cmp/sem_E3_005_126/gt.jpg",
+    "endos3": "static/img/cmp/sem_E3_005_126/endos3.jpg",
+    "sgs": "static/img/cmp/sem_E3_005_126/sgs.jpg",
+    "sni": "static/img/cmp/sem_E3_005_126/sni.jpg",
+    "semgauss": "static/img/cmp/sem_E3_005_126/semgauss.jpg"
+   },
+   "badge": {
+    "endos3": "94.6",
+    "sgs": "26.7",
+    "sni": "37.2",
+    "semgauss": "16.5"
+   },
+   "metric": "frame mIoU (%)",
+   "gt_note": null
+  },
+  {
+   "id": "sem_G3_001_396",
+   "task": "semantics",
+   "label": "CRCD++ G3, frame 396",
+   "ref": "gt",
+   "tiles": {
+    "input": "static/img/cmp/sem_G3_001_396/input.jpg",
+    "gt": "static/img/cmp/sem_G3_001_396/gt.jpg",
+    "endos3": "static/img/cmp/sem_G3_001_396/endos3.jpg",
+    "sgs": "static/img/cmp/sem_G3_001_396/sgs.jpg",
+    "sni": "static/img/cmp/sem_G3_001_396/sni.jpg",
+    "semgauss": "static/img/cmp/sem_G3_001_396/semgauss.jpg"
+   },
+   "badge": {
+    "endos3": "69.0",
+    "sgs": "48.5",
+    "sni": "35.8",
+    "semgauss": "47.6"
+   },
+   "metric": "frame mIoU (%)",
+   "gt_note": null
+  },
+  {
+   "id": "sem_trial_3_80",
+   "task": "semantics",
+   "label": "Semantic-SuPer trial 3, frame 80",
+   "ref": "gt",
+   "tiles": {
+    "input": "static/img/cmp/sem_trial_3_80/input.jpg",
+    "gt": "static/img/cmp/sem_trial_3_80/gt.jpg",
+    "endos3": "static/img/cmp/sem_trial_3_80/endos3.jpg",
+    "sgs": "static/img/cmp/sem_trial_3_80/sgs.jpg",
+    "sni": "static/img/cmp/sem_trial_3_80/sni.jpg",
+    "semgauss": "static/img/cmp/sem_trial_3_80/semgauss.jpg"
+   },
+   "badge": {
+    "endos3": "95.1",
+    "sgs": "64.9",
+    "sni": "73.1",
+    "semgauss": "75.6"
+   },
+   "metric": "frame mIoU (%)",
+   "gt_note": "DeepLabV3+ input"
+  },
+  {
+   "id": "sem_trial_4_86",
+   "task": "semantics",
+   "label": "Semantic-SuPer trial 4, frame 86",
+   "ref": "gt",
+   "tiles": {
+    "input": "static/img/cmp/sem_trial_4_86/input.jpg",
+    "gt": "static/img/cmp/sem_trial_4_86/gt.jpg",
+    "endos3": "static/img/cmp/sem_trial_4_86/endos3.jpg",
+    "sgs": "static/img/cmp/sem_trial_4_86/sgs.jpg",
+    "sni": "static/img/cmp/sem_trial_4_86/sni.jpg",
+    "semgauss": "static/img/cmp/sem_trial_4_86/semgauss.jpg"
+   },
+   "badge": {
+    "endos3": "94.1",
+    "sgs": "80.3",
+    "sni": "75.0",
+    "semgauss": "80.4"
+   },
+   "metric": "frame mIoU (%)",
+   "gt_note": "DeepLabV3+ input"
+  }
+ ]
+}

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EndoS³: Endoscopic Semantic Splatting SLAM</title>
+  <meta name="description" content="EndoS³: a semantic Gaussian-splatting SLAM framework for deformable endoscopic scenes, and CRCD++, a cholecystectomy benchmark with camera poses, depth and instance annotations.">
+  <meta property="og:title" content="EndoS³: Endoscopic Semantic Splatting SLAM">
+  <meta property="og:description" content="Instance semantics guide motion decomposition, tracking and deformable mapping in surgical scenes.">
+  <meta property="og:image" content="static/img/pipeline.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+  <nav class="topnav" aria-label="Sections">
+    <div class="topnav-inner">
+      <a class="brand" href="#top">EndoS³</a>
+      <div class="navlinks">
+        <a href="#video">Video</a><a href="#abstract">Abstract</a><a href="#method">Method</a><a href="#dataset">CRCD++</a><a href="#results">Results</a><a href="#bibtex">BibTeX</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <p class="venue">IPCAI 2027 <span class="muted">(submitted)</span></p>
+    <h1>EndoS<sup>3</sup>: <span class="hl">Endo</span>scopic <span class="hl">S</span>emantic <span class="hl">S</span>platting <span class="hl">S</span>LAM</h1>
+    <p class="authors">
+      <span>Mona Sheikh Zeinoddin<sup>1*</sup></span>
+      <span>Benjamin Wright<sup>1*</sup></span>
+      <span>Zafer Tandogdu<sup>1,2</sup></span>
+      <span>Greg Shaw<sup>1,2</sup></span>
+      <span>Evangelos Mazomenos<sup>1</sup></span>
+      <span>Danail Stoyanov<sup>1</sup></span>
+    </p>
+    <p class="affils">
+      <span><sup>1</sup>Hawkes Institute, University College London</span>
+      <span><sup>2</sup>Department of Urology, University College London Hospitals</span>
+    </p>
+    <p class="equal muted"><sup>*</sup>Equal contribution</p>
+    <div class="buttons">
+      <a class="btn disabled" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 2h9l5 5v15H6zM14 3.5V8h4.5"/></svg>Paper<span class="soon">soon</span></a>
+      <a class="btn disabled" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>Code<span class="soon">soon</span></a>
+      <a class="btn disabled" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C7.6 3 4 4.3 4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6c0-1.7-3.6-3-8-3zm0 2c3.9 0 6 1 6 1s-2.1 1-6 1-6-1-6-1 2.1-1 6-1zM6 8.6C7.5 9.2 9.6 9.5 12 9.5s4.5-.3 6-.9V12c0 .4-2.2 1.5-6 1.5S6 12.4 6 12zm0 5.6c1.5.6 3.6.9 6 .9s4.5-.3 6-.9V18c0 .4-2.2 1.5-6 1.5S6 18.4 6 18z"/></svg>CRCD++ Dataset<span class="soon">soon</span></a>
+      <a class="btn" href="#video">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>Video</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="video" class="section">
+      <div class="video-frame">
+        <video controls preload="metadata" playsinline poster="static/video/endos3_overview_poster.jpg">
+          <source src="static/video/endos3_overview.mp4" type="video/mp4">
+          Your browser cannot play this video. <a href="static/video/endos3_overview.mp4">Download it</a>.
+        </video>
+      </div>
+    </section>
+
+    <section id="abstract" class="section narrow">
+      <h2>Abstract</h2>
+      <p><strong>Purpose.</strong> Despite advances in 3D surgical scene understanding, semantic simultaneous localisation and mapping (SLAM) remains under-explored for two key reasons. First, it requires solving three challenging tasks in parallel: camera pose tracking, high-fidelity deformable reconstruction, and semantic mapping, making progress particularly demanding. Second, progress is further limited by the scarcity of datasets that provide the ground truth needed to evaluate all three tasks comprehensively under procedural conditions that closely reflect real endoscopic environments.</p>
+      <p>We propose EndoS<sup>3</sup>, a semantic SLAM framework based on 3D Gaussian splatting that uses per-frame instance masks to guide all three tasks. An instance-level motion decomposition separates static from dynamic instances, testing the flow that camera motion cannot explain against both flow noise and neighbouring instances. The camera is tracked against the static Gaussians, while an instance-aware warp field gives each dynamic instance its own control nodes and deformation network. A semantic node allocation redistributes a fixed node budget across instances according to their size and non-rigidity. We also introduce CRCD++, an ex-vivo cholecystectomy dataset with RGB-D frames, camera poses and instance annotations for full semantic SLAM evaluation.</p>
+      <p><strong>Results.</strong> We compare EndoS<sup>3</sup> with state-of-the-art general-purpose and surgical semantic SLAM methods in tracking, reconstruction and semantic mapping on the CRCD++ and the SemSup datasets. EndoS<sup>3</sup> surpasses all previous approaches.</p>
+      <p><strong>Conclusion.</strong> Modelling motion and deformation with semantic information supports accurate semantic SLAM in deformable surgical scenes. EndoS<sup>3</sup> and CRCD++ provide a method and a benchmark for improved geometric and semantic understanding in endoscopic environments.</p>
+    </section>
+
+    <section id="method" class="section">
+      <h2>Method</h2>
+      <figure class="figure">
+        <a href="static/img/pipeline.png" target="_blank" rel="noopener"><img src="static/img/pipeline.png" alt="EndoS3 pipeline: RGB, depth and instance map inputs; tracking with instance-level motion decomposition and pose estimation against static Gaussians; mapping with an instance-aware warp field and semantic node allocation; losses on colour, depth, instance, optical flow, scene flow and DINOv3 features." loading="lazy"></a>
+        <figcaption>EndoS<sup>3</sup> uses instance semantics in both tracking and mapping.</figcaption>
+      </figure>
+      <div class="cards">
+        <article class="card">
+          <h3>Instance-level motion decomposition</h3>
+          <p>Optical flow from WAFT, minus the flow explained by a PnP camera estimate, is pooled in superpixels split along instance boundaries. Each instance is tested against flow noise and against its neighbours; only instances that pass both are dynamic. The camera is tracked against the static part.</p>
+        </article>
+        <article class="card">
+          <h3>Instance-aware warp field</h3>
+          <p>Every instance gets its own control nodes and deformation network, and motion only propagates within an instance, so instruments and tissue no longer blend at their contact points.</p>
+        </article>
+        <article class="card">
+          <h3>Semantic node allocation</h3>
+          <p>A fixed node budget is redistributed across instances every frame, weighted by visible area and non-rigidity, so nodes follow instruments entering the view and regions that deform most.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="dataset" class="section">
+      <h2>CRCD++ dataset</h2>
+      <p class="lead narrow">20 ex-vivo robotic cholecystectomy sequences (200–2,108 frames; 14,688 stereo pairs) built on eCRCD, with dense human-annotated masks for background, liver, gallbladder and tools on every frame (one instance ID per tool), camera poses, and FoundationStereo depth.</p>
+      <figure class="figure">
+        <img src="static/img/crcdpp_annotation.jpg" alt="Annotation comparison on CRCD frames: input image, eCRCD Track Anything propagated masks, and the CRCD++ manual annotations." loading="lazy">
+        <figcaption>Input | eCRCD (Track Anything propagation) | CRCD++ manual annotation.</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table class="dstable">
+          <caption>Surgical semantic SLAM datasets. Sem.: semantic classes (<sup>s</sup>sparse, <sup>t</sup>tools only, <sup>nt</sup>no tools). Seq. len.: continuous sequence length in frames.</caption>
+          <thead><tr><th></th><th>CholecSeg8k</th><th>EndoVis18</th><th>Endoscapes</th><th>Semantic-SuPer</th><th>StereoMIS</th><th>D4D</th><th>eCRCD</th><th class="us">CRCD++</th></tr></thead>
+          <tbody>
+            <tr><th>Poses</th><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok">Yes</td><td class="ok us">Yes</td></tr>
+            <tr><th>Depth</th><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="ok">GT</td><td class="no">No</td><td class="ok us">Pseudo-GT</td></tr>
+            <tr><th>Sem.</th><td class="ok">13</td><td class="no">12<sup>s</sup></td><td class="no">6<sup>s</sup></td><td class="ok">3</td><td class="no">1<sup>t</sup></td><td class="no">1<sup>t</sup></td><td class="no">2<sup>nt</sup></td><td class="ok us">4</td></tr>
+            <tr><th>Seq. len.</th><td class="no">80</td><td class="no">Sparse</td><td class="no">Sparse</td><td class="ok">150</td><td class="ok">1.4–9.6k</td><td class="ok">~3k</td><td class="no">120</td><td class="ok us">0.2–2.1k</td></tr>
+            <tr><th>Frames</th><td>8,080</td><td>2,384</td><td>493</td><td>600</td><td>~58.7k</td><td>300k+</td><td>–</td><td class="us">14,688</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="results" class="section">
+      <h2>Results</h2>
+      <p class="lead narrow">Compared with DDS-SLAM, SNI-SLAM, SGS-SLAM, SemGauss-SLAM, PERSEUS and Semantic-SuPer on five CRCD++ sequences and Semantic-SuPer (SemSup). Every method receives the same semantic input.</p>
+
+      <h3 class="sub" id="visual">Visual comparison</h3>
+      <p class="hint">Drag the divider. Pick any two methods; the thumbnails below show every method on the same frame.</p>
+      <div class="cmp" id="cmp">
+        <div class="cmp-controls">
+          <div class="seg" role="tablist" id="cmpTask"></div>
+          <div class="pills" id="cmpScene"></div>
+        </div>
+        <div class="cmp-pick">
+          <label>Left <select id="cmpLeft"></select></label>
+          <label>Right <select id="cmpRight"></select></label>
+        </div>
+        <div class="slider" id="slider">
+          <img id="imgRight" alt="">
+          <div class="clip" id="clipLeft"><img id="imgLeft" alt=""></div>
+          <div class="divider" id="divider" aria-hidden="true"><span></span></div>
+          <span class="tag tl" id="tagLeft"></span>
+          <span class="tag tr" id="tagRight"></span>
+          <input type="range" min="0" max="100" value="50" step="0.1" id="cmpRange" aria-label="Comparison divider position">
+        </div>
+        <p class="cmp-note" id="cmpNote"></p>
+        <div class="thumbs" id="cmpThumbs"></div>
+      </div>
+
+      <h3 class="sub" id="quant">Quantitative results</h3>
+      <div class="seg" role="tablist" id="metricTabs"></div>
+      <div class="table-wrap"><table class="rtable" id="rtable"></table></div>
+      <p class="hint" id="metricNote"></p>
+
+      <h3 class="sub" id="traj">Camera trajectories</h3>
+      <p class="hint">Sim(3)-aligned to the CRCD++ camera poses, origin at the first ground-truth pose; drag to rotate, scroll to zoom. ATE as in the table above.</p>
+      <div class="traj-controls">
+        <div class="pills" id="trajSeq"></div>
+        <label>Compare with <select id="trajBase"></select></label>
+      </div>
+      <div class="traj" id="trajPlot"><p class="muted loading">Loading 3-D viewer…</p></div>
+
+      <h3 class="sub" id="ablation">Ablations</h3>
+      <div class="ablations">
+        <div class="table-wrap">
+          <table class="rtable small">
+            <caption>Modules, on a subset of CRCD++ C3. MD: motion decomposition (otherwise only instruments are dynamic); IW: instance-aware warp field (otherwise one shared MLP); NA: semantic node allocation (otherwise a fixed node set).</caption>
+            <thead><tr><th>MD</th><th>IW</th><th>NA</th><th>PSNR ↑</th><th>Depth ↓</th><th>ATE ↓</th><th>mIoU ↑</th></tr></thead>
+            <tbody>
+              <tr><td class="x">✗</td><td>✓</td><td>✓</td><td>22.18</td><td>5.85</td><td>2.91</td><td>52.8</td></tr>
+              <tr><td>✓</td><td class="x">✗</td><td>✓</td><td><u>23.28</u></td><td>4.62</td><td><u>2.55</u></td><td><u>71.3</u></td></tr>
+              <tr><td>✓</td><td>✓</td><td class="x">✗</td><td>23.08</td><td><u>4.43</u></td><td>2.83</td><td>70.9</td></tr>
+              <tr class="ours"><td>✓</td><td>✓</td><td>✓</td><td><b>24.35</b></td><td><b>4.35</b></td><td><b>2.29</b></td><td><b>74.4</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table class="rtable small">
+            <caption>Motion-decomposition tests, CRCD++ C3 frames 469–708. z<sup>A</sup>: instance-level test; z<sup>B</sup>: boundary test.</caption>
+            <thead><tr><th>z<sup>A</sup></th><th>z<sup>B</sup></th><th>PSNR ↑</th><th>ATE ↓</th><th>mIoU ↑</th></tr></thead>
+            <tbody>
+              <tr><td>✓</td><td class="x">✗</td><td>24.39</td><td>3.03</td><td>71.9</td></tr>
+              <tr><td class="x">✗</td><td>✓</td><td>24.29</td><td>2.80</td><td>72.6</td></tr>
+              <tr class="ours"><td>✓</td><td>✓</td><td><b>24.45</b></td><td><b>2.75</b></td><td><b>73.4</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="bibtex" class="section narrow">
+      <h2>BibTeX</h2>
+      <div class="bib">
+        <button class="copy" id="copyBib" type="button">Copy</button>
+<pre id="bibText">@misc{sheikhzeinoddin2026endos3,
+  title  = {EndoS$^3$: Endoscopic Semantic Splatting SLAM},
+  author = {Sheikh Zeinoddin, Mona and Wright, Benjamin and Tandogdu, Zafer
+            and Shaw, Greg and Mazomenos, Evangelos and Stoyanov, Danail},
+  note   = {Submitted to IPCAI 2027},
+  year   = {2026}
+}</pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Hawkes Institute, University College London. Page layout inspired by <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://gs-slam.github.io/">GS-SLAM</a>.</p>
+  </footer>
+
+  <script src="static/data/tables.js"></script>
+  <script src="static/js/app.js"></script>
+</body>
+</html>
