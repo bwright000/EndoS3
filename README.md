@@ -31,6 +31,6 @@ A free account serves Pages only from a public repository.
 | `static/data/trajectories.json` | Sim(3)-aligned trajectories (mm), scored exactly as the paper's ATE table (C2 = first 360 frames) |
 | `static/video/` | 720p web copy of the demo video (`endos3_video_draft_full.mp4`; venue line erased from the title and end cards) + poster |
 | `static/img/pipeline.png`, `crcdpp_annotation.jpg` | method figure (from `endos3_method_figure.pdf`), CRCD++ annotation figure |
-| `tools/export_videos.py`, `tools/export_assets.py` | regenerate the comparison videos and the trajectories from the benchmark outputs (author's machine paths) |
+| `tools/` (local only, git-ignored) | scripts that regenerate the comparison videos and the trajectories from the benchmark outputs on the author's machine |
 
 The 3-D trajectory viewer uses Plotly (`plotly.js-gl3d-dist-min@2.35.2` from jsDelivr), loaded only when the section scrolls into view.
