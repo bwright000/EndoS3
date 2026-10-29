@@ -1,4 +1,4 @@
-"""Builds the project page's trajectory data (comparison videos: tools/export_videos.py) from the IPCAI benchmark (run once, locally; paths are the author's machine).
+"""Builds the project page's trajectory data (comparison videos: tools/export_videos.py) from the benchmark outputs (run once, locally; paths are the author's machine).
   static/data/trajectories.json    Sim(3)-aligned, lag-shifted trajectories in mm, scored exactly as the paper's ATE table
                                    (C2 = its first 360 frames, as in the paper)
 python tools/export_assets.py"""

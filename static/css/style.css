@@ -36,8 +36,6 @@ sup { font-size: .68em; line-height: 0; }
 
 /* hero */
 .hero { max-width: var(--w); margin: 0 auto; padding: 56px 16px 24px; text-align: center; }
-.venue { display: inline-block; margin: 0 0 14px; padding: 3px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: 14px; }
-.venue .muted { font-weight: 500; }
 h1 { font-size: clamp(28px, 4.6vw, 46px); line-height: 1.15; margin: 0 0 18px; letter-spacing: -0.02em; font-weight: 700; }
 h1 .hl { color: var(--accent-fill); }
 .authors { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 22px; font-size: 18px; margin: 0 0 8px; }

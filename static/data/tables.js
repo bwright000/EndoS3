@@ -1,4 +1,4 @@
-// Paper tables, values and marks verbatim from the IPCAI 2027 submission (bold = best "**", underline = second "_").
+// Paper tables, values and marks verbatim from the paper (bold = best "**", underline = second "_").
 // Column order as in the paper: C1 C2 C3 G3 E3 Avg (+ Semantic-SuPer where the paper reports it).
 window.PAPER = {
   seqs: ["C1", "C2", "C3", "G3", "E3", "Avg."],
